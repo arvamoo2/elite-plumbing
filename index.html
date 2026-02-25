@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:locale" content="en_CA">
 
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" href="favicon.png" type="image/png">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,22 +58,84 @@
         <a href="index.html" class="logo-link" aria-label="Richmond Hill Elite Plumbing – Home">
             <div class="logo-container">
                 <div class="logo-icon">
-                    <svg width="42" height="42" viewBox="0 0 42 42" fill="none" aria-hidden="true">
-                        <circle cx="21" cy="21" r="21" fill="#1a1a1a"/>
-                        <circle cx="21" cy="21" r="21" fill="url(#logoGold)"/>
+                    <!--
+                        ELITE PLUMBING EMBLEM — Redesigned
+                        A heraldic shield form housing a refined crown-wrench monogram
+                        with a water-drop jewel at the base. Rich metallic gold gradient,
+                        engraved fine-line details, and a premium chamfered border.
+                    -->
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <defs>
-                            <radialGradient id="logoGold" cx="35%" cy="25%" r="70%">
-                                <stop offset="0%" stop-color="#d4a843"/>
-                                <stop offset="100%" stop-color="#8b6914"/>
+                            <!-- Main gold radial — bright hot spot top-left, deep shadow bottom-right -->
+                            <radialGradient id="emblemGold" cx="32%" cy="22%" r="72%" gradientUnits="objectBoundingBox">
+                                <stop offset="0%"   stop-color="#f0d080"/>
+                                <stop offset="38%"  stop-color="#c8a84b"/>
+                                <stop offset="72%"  stop-color="#9a7428"/>
+                                <stop offset="100%" stop-color="#6b4e12"/>
                             </radialGradient>
+                            <!-- Subtle inner face fill (near-black with gold tint) -->
+                            <linearGradient id="emblemFace" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%"   stop-color="#1e1a10"/>
+                                <stop offset="100%" stop-color="#0e0c06"/>
+                            </linearGradient>
+                            <!-- Highlight sheen across the shield top -->
+                            <linearGradient id="emblemSheen" x1="0" y1="0" x2="0.5" y2="1">
+                                <stop offset="0%"   stop-color="rgba(255,245,195,0.22)"/>
+                                <stop offset="55%"  stop-color="rgba(255,245,195,0)"/>
+                            </linearGradient>
+                            <!-- Water drop inner highlight -->
+                            <radialGradient id="dropGold" cx="35%" cy="25%" r="65%">
+                                <stop offset="0%"   stop-color="#f0d080"/>
+                                <stop offset="100%" stop-color="#9a7428"/>
+                            </radialGradient>
+                            <!-- Clip to shield outline -->
+                            <clipPath id="shieldClip">
+                                <path d="M24 2L43 9.5V22C43 34 34.5 43.5 24 46C13.5 43.5 5 34 5 22V9.5L24 2Z"/>
+                            </clipPath>
                         </defs>
-                        <!-- Crown-style pipe wrench -->
-                        <path d="M13 30L24 19" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
-                        <circle cx="28" cy="15" r="5.5" stroke="#fff" stroke-width="2" fill="none"/>
-                        <path d="M23.5 19.5l3-3" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                        <!-- Water droplet -->
-                        <path d="M14.5 26.5C14.5 26.5 11 23 11 20.5C11 18.3 12.5 17 14.5 17C16.5 17 18 18.3 18 20.5C18 23 14.5 26.5 14.5 26.5Z"
-                              fill="#c8a84b" opacity="0.9"/>
+
+                        <!-- ── Shield outer border (gold) ── -->
+                        <path d="M24 2L43 9.5V22C43 34 34.5 43.5 24 46C13.5 43.5 5 34 5 22V9.5L24 2Z"
+                              fill="url(#emblemGold)"/>
+                        <!-- ── Inner chamfer line (engraved inset) ── -->
+                        <path d="M24 5L40.5 11.5V22C40.5 32.5 32.8 41.2 24 43.5C15.2 41.2 7.5 32.5 7.5 22V11.5L24 5Z"
+                              fill="url(#emblemFace)" stroke="url(#emblemGold)" stroke-width="0.6" opacity="0.9"/>
+                        <!-- ── Sheen overlay ── -->
+                        <path d="M24 2L43 9.5V22C43 34 34.5 43.5 24 46C13.5 43.5 5 34 5 22V9.5L24 2Z"
+                              fill="url(#emblemSheen)" clip-path="url(#shieldClip)"/>
+
+                        <!-- ── CROWN — top of shield ── -->
+                        <!-- Crown base bar -->
+                        <rect x="13.5" y="19.5" width="21" height="2.5" rx="0.8" fill="url(#emblemGold)"/>
+                        <!-- Crown points (3 spires) -->
+                        <path d="M15 20L15 14.5L17.5 17L19.5 12.5L21.5 16L24 13L26.5 16L28.5 12.5L30.5 17L33 14.5L33 20"
+                              fill="url(#emblemGold)" stroke="url(#emblemGold)" stroke-width="0.4"
+                              stroke-linejoin="round" stroke-linecap="round"/>
+                        <!-- Crown jewel dots -->
+                        <circle cx="19.5" cy="14.2" r="1.1" fill="#f0d080" opacity="0.9"/>
+                        <circle cx="24"   cy="13"   r="1.1" fill="#f0d080" opacity="0.9"/>
+                        <circle cx="28.5" cy="14.2" r="1.1" fill="#f0d080" opacity="0.9"/>
+
+                        <!-- ── WRENCH handle — elegant diagonal rule ── -->
+                        <path d="M16.5 34.5L23.5 27.5"
+                              stroke="url(#emblemGold)" stroke-width="2.2" stroke-linecap="round"/>
+                        <!-- Wrench head — precision circle with hex cutout suggestion -->
+                        <circle cx="27" cy="25.5" r="5" stroke="url(#emblemGold)" stroke-width="1.7" fill="none"/>
+                        <circle cx="27" cy="25.5" r="2.2" fill="url(#emblemGold)" opacity="0.45"/>
+                        <!-- Wrench jaw notch -->
+                        <path d="M22.8 29.2l2.8-2.8"
+                              stroke="url(#emblemGold)" stroke-width="1.6" stroke-linecap="round"/>
+
+                        <!-- ── WATER DROP jewel — base of shield ── -->
+                        <path d="M17.5 38C17.5 38 14 35 14 32.5C14 30.4 15.5 29 17.5 29C19.5 29 21 30.4 21 32.5C21 35 17.5 38 17.5 38Z"
+                              fill="url(#dropGold)" opacity="0.92"/>
+                        <!-- Drop inner specular -->
+                        <path d="M16.2 31.5C16.2 30.5 16.8 29.9 17.5 29.8"
+                              stroke="rgba(255,248,210,0.55)" stroke-width="0.9" stroke-linecap="round"/>
+
+                        <!-- ── Fine horizontal rule (divider line) between crown and wrench ── -->
+                        <line x1="13.5" y1="23" x2="34.5" y2="23"
+                              stroke="url(#emblemGold)" stroke-width="0.5" opacity="0.55"/>
                     </svg>
                 </div>
                 <div class="logo-text-block">
@@ -131,20 +193,21 @@
         </p>
 
         <div class="hero-cta-group">
-            <button class="dispatch-btn" id="heroDispatchBtn" onclick="dispatchAndGo()">
+            <button class="dispatch-btn magnetic-btn" id="heroDispatchBtn" onclick="dispatchAndGo()">
                 <span class="dispatch-icon" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                         <path d="M3 9h12M10 4l5 5-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </span>
                 <span class="dispatch-label">DISPATCH NOW</span>
+                <span class="btn-shimmer" aria-hidden="true"></span>
                 <span class="dispatch-loader" id="dispatchLoader" style="display:none" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 20 20" fill="none" class="spin">
                         <circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="34" stroke-dashoffset="10"/>
                     </svg>
                 </span>
             </button>
-            <a href="#quote" class="quote-hero-btn" onclick="scrollToQuote(); return false;">
+            <a href="#quote" class="quote-hero-btn magnetic-btn" onclick="scrollToQuote(); return false;">
                 Request a Free Quote
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                     <path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -643,7 +706,7 @@
                 <label for="f-message">Tell Us More</label>
                 <textarea id="f-message" name="message" rows="4" placeholder="Briefly describe the issue or what you need done…"></textarea>
             </div>
-            <button type="submit" class="form-submit-btn">
+            <button type="submit" class="form-submit-btn magnetic-btn">
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
                     <path d="M2 9h14M10 3l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -668,18 +731,51 @@
         <div class="footer-inner">
             <div class="footer-brand">
                 <div class="footer-logo">
-                    <svg width="38" height="38" viewBox="0 0 38 38" fill="none" aria-hidden="true">
-                        <circle cx="19" cy="19" r="19" fill="#1a1a1a"/>
-                        <circle cx="19" cy="19" r="19" fill="url(#footerGold)"/>
+                    <!-- Footer logo — same premium emblem at 38px -->
+                    <svg width="38" height="38" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <defs>
-                            <radialGradient id="footerGold" cx="35%" cy="25%" r="70%">
-                                <stop offset="0%" stop-color="#d4a843"/>
-                                <stop offset="100%" stop-color="#8b6914"/>
+                            <radialGradient id="footerEmblemGold" cx="32%" cy="22%" r="72%" gradientUnits="objectBoundingBox">
+                                <stop offset="0%"   stop-color="#f0d080"/>
+                                <stop offset="38%"  stop-color="#c8a84b"/>
+                                <stop offset="72%"  stop-color="#9a7428"/>
+                                <stop offset="100%" stop-color="#6b4e12"/>
                             </radialGradient>
+                            <linearGradient id="footerEmblemFace" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%"   stop-color="#1e1a10"/>
+                                <stop offset="100%" stop-color="#0e0c06"/>
+                            </linearGradient>
+                            <linearGradient id="footerEmblemSheen" x1="0" y1="0" x2="0.5" y2="1">
+                                <stop offset="0%"   stop-color="rgba(255,245,195,0.22)"/>
+                                <stop offset="55%"  stop-color="rgba(255,245,195,0)"/>
+                            </linearGradient>
+                            <radialGradient id="footerDropGold" cx="35%" cy="25%" r="65%">
+                                <stop offset="0%"   stop-color="#f0d080"/>
+                                <stop offset="100%" stop-color="#9a7428"/>
+                            </radialGradient>
+                            <clipPath id="footerShieldClip">
+                                <path d="M24 2L43 9.5V22C43 34 34.5 43.5 24 46C13.5 43.5 5 34 5 22V9.5L24 2Z"/>
+                            </clipPath>
                         </defs>
-                        <path d="M11 27L22 16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="26" cy="12" r="5" stroke="#fff" stroke-width="2" fill="none"/>
-                        <path d="M12.5 24C12.5 24 9 20.5 9 18C9 15.8 10.5 14.5 12.5 14.5S16 15.8 16 18C16 20.5 12.5 24 12.5 24Z" fill="#c8a84b" opacity="0.9"/>
+                        <path d="M24 2L43 9.5V22C43 34 34.5 43.5 24 46C13.5 43.5 5 34 5 22V9.5L24 2Z" fill="url(#footerEmblemGold)"/>
+                        <path d="M24 5L40.5 11.5V22C40.5 32.5 32.8 41.2 24 43.5C15.2 41.2 7.5 32.5 7.5 22V11.5L24 5Z"
+                              fill="url(#footerEmblemFace)" stroke="url(#footerEmblemGold)" stroke-width="0.6" opacity="0.9"/>
+                        <path d="M24 2L43 9.5V22C43 34 34.5 43.5 24 46C13.5 43.5 5 34 5 22V9.5L24 2Z"
+                              fill="url(#footerEmblemSheen)" clip-path="url(#footerShieldClip)"/>
+                        <rect x="13.5" y="19.5" width="21" height="2.5" rx="0.8" fill="url(#footerEmblemGold)"/>
+                        <path d="M15 20L15 14.5L17.5 17L19.5 12.5L21.5 16L24 13L26.5 16L28.5 12.5L30.5 17L33 14.5L33 20"
+                              fill="url(#footerEmblemGold)" stroke="url(#footerEmblemGold)" stroke-width="0.4" stroke-linejoin="round" stroke-linecap="round"/>
+                        <circle cx="19.5" cy="14.2" r="1.1" fill="#f0d080" opacity="0.9"/>
+                        <circle cx="24"   cy="13"   r="1.1" fill="#f0d080" opacity="0.9"/>
+                        <circle cx="28.5" cy="14.2" r="1.1" fill="#f0d080" opacity="0.9"/>
+                        <path d="M16.5 34.5L23.5 27.5" stroke="url(#footerEmblemGold)" stroke-width="2.2" stroke-linecap="round"/>
+                        <circle cx="27" cy="25.5" r="5" stroke="url(#footerEmblemGold)" stroke-width="1.7" fill="none"/>
+                        <circle cx="27" cy="25.5" r="2.2" fill="url(#footerEmblemGold)" opacity="0.45"/>
+                        <path d="M22.8 29.2l2.8-2.8" stroke="url(#footerEmblemGold)" stroke-width="1.6" stroke-linecap="round"/>
+                        <path d="M17.5 38C17.5 38 14 35 14 32.5C14 30.4 15.5 29 17.5 29C19.5 29 21 30.4 21 32.5C21 35 17.5 38 17.5 38Z"
+                              fill="url(#footerDropGold)" opacity="0.92"/>
+                        <path d="M16.2 31.5C16.2 30.5 16.8 29.9 17.5 29.8"
+                              stroke="rgba(255,248,210,0.55)" stroke-width="0.9" stroke-linecap="round"/>
+                        <line x1="13.5" y1="23" x2="34.5" y2="23" stroke="url(#footerEmblemGold)" stroke-width="0.5" opacity="0.55"/>
                     </svg>
                     <div>
                         <span class="footer-brand-name">Richmond Hill Elite Plumbing</span>

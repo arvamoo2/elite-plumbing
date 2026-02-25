@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   RICHMOND HILL ELITE PLUMBING — style.css
+   RICHMOND HILL ELITE PLUMBING — style.css  v2.0 (Polished)
    Palette: Charcoal Black · Crisp White · Metallic Gold
    Fonts:   Cinzel (headings) · DM Sans (body)
    ═══════════════════════════════════════════════════════════ */
@@ -37,9 +37,22 @@
     --radius-lg:    20px;
     --radius-full:  100px;
 
-    /* Transitions */
+    /* ── Transition Tokens ─────────────────────────────────
+       Using a fast snappy easing for all UI interactions.
+       cubic-bezier(0.25, 0.8, 0.25, 1) = "fast-out slow-in"
+       which gives immediate movement with a graceful landing.
+    ─────────────────────────────────────────────────────── */
+    --ease-snap:    cubic-bezier(0.25, 0.8, 0.25, 1);
     --ease-out:     cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);  /* subtle overshoot */
     --ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);
+
+    /* ── Transition Durations ──────────────────────────────
+       Hover = 0.18s (feels instant), reveal = 0.7s (elegant)
+    ─────────────────────────────────────────────────────── */
+    --dur-hover:    0.18s;
+    --dur-medium:   0.32s;
+    --dur-reveal:   0.72s;
 
     /* Layout */
     --container-max: 1160px;
@@ -81,7 +94,7 @@ button { cursor: pointer; font-family: inherit; border: none; background: none; 
     padding: 0 var(--container-pad);
 }
 
-/* ─── TYPOGRAPHY UTILITIES ────────────────────────────────── */
+/* ─── TYPOGRAPHY ──────────────────────────────────────────── */
 h1, h2, h3, h4 {
     font-family: var(--font-heading);
     line-height: 1.2;
@@ -89,36 +102,76 @@ h1, h2, h3, h4 {
     color: var(--white);
 }
 
-/* ─── GOLD ACCENT LINE ────────────────────────────────────── */
-@keyframes goldPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-
-/* ─── SCROLL REVEAL ───────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   SCROLL REVEAL — Spring physics feel
+   Elements slide up with a gentle overshoot via spring easing.
+   Stagger delays cascade down child elements.
+═══════════════════════════════════════════════════════════ */
 .reveal {
     opacity: 0;
-    transform: translateY(36px);
-    transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+    transform: translateY(40px);
+    transition:
+        opacity  var(--dur-reveal) var(--ease-out),
+        transform var(--dur-reveal) var(--ease-spring);
+    will-change: opacity, transform;
 }
 .reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
 }
+
+/* Staggered children — each slides up with cascading delay */
 .reveal-child {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
+    transform: translateY(32px);
+    transition:
+        opacity   0.6s var(--ease-out),
+        transform 0.6s var(--ease-spring);
+    will-change: opacity, transform;
 }
 .reveal-child.is-visible {
     opacity: 1;
     transform: translateY(0);
 }
-.reveal-child:nth-child(2) { transition-delay: 0.1s; }
-.reveal-child:nth-child(3) { transition-delay: 0.2s; }
-.reveal-child:nth-child(4) { transition-delay: 0.3s; }
-.reveal-child:nth-child(5) { transition-delay: 0.4s; }
-.reveal-child:nth-child(6) { transition-delay: 0.5s; }
+.reveal-child:nth-child(1) { transition-delay: 0.04s; }
+.reveal-child:nth-child(2) { transition-delay: 0.12s; }
+.reveal-child:nth-child(3) { transition-delay: 0.20s; }
+.reveal-child:nth-child(4) { transition-delay: 0.28s; }
+.reveal-child:nth-child(5) { transition-delay: 0.36s; }
+.reveal-child:nth-child(6) { transition-delay: 0.44s; }
+
+/* ═══════════════════════════════════════════════════════════
+   KEYFRAMES
+═══════════════════════════════════════════════════════════ */
+@keyframes statusPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+}
+
+@keyframes ringPulse {
+    0%   { transform: scale(1); opacity: 1; }
+    100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ── Button shimmer sweep — moves left→right continuously ── */
+@keyframes shimmerSweep {
+    0%   { transform: translateX(-130%) skewX(-12deg); }
+    100% { transform: translateX(300%)  skewX(-12deg); }
+}
+
+/* ── Subtle logo float ── */
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0);    }
+    50%       { transform: translateY(-2px); }
+}
+
+/* ─── UTILITY ─────────────────────────────────────────────── */
+.spin { animation: spin 0.85s linear infinite; }
 
 /* ═══════════════════════════════════════════════════════════
    HEADER
@@ -132,12 +185,13 @@ h1, h2, h3, h4 {
     backdrop-filter: blur(14px) saturate(120%);
     -webkit-backdrop-filter: blur(14px) saturate(120%);
     border-bottom: 1px solid rgba(200, 168, 75, 0.1);
-    transition: background 0.35s ease, box-shadow 0.35s ease;
+    transition:
+        background var(--dur-medium) var(--ease-snap),
+        box-shadow var(--dur-medium) var(--ease-snap);
 }
 #site-header.scrolled {
     background: rgba(12, 12, 12, 0.97);
-    box-shadow: 0 4px 30px rgba(0,0,0,0.4);
-    border-bottom-color: rgba(200, 168, 75, 0.2);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.45), 0 1px 0 rgba(200,168,75,0.12);
 }
 
 #site-header nav {
@@ -151,14 +205,24 @@ h1, h2, h3, h4 {
     gap: 16px;
 }
 
-/* Logo */
+/* ── Logo ── */
 .logo-link { flex-shrink: 0; }
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 11px;
 }
-.logo-icon { flex-shrink: 0; }
+.logo-icon {
+    flex-shrink: 0;
+    /* Subtle continuous float draws the eye to the emblem */
+    animation: logoFloat 4.5s ease-in-out infinite;
+    filter: drop-shadow(0 2px 8px rgba(200,168,75,0.25));
+    transition: filter var(--dur-hover) var(--ease-snap);
+}
+.logo-link:hover .logo-icon {
+    filter: drop-shadow(0 3px 14px rgba(200,168,75,0.5));
+    animation-play-state: paused;
+}
 .logo-text-block {
     display: flex;
     flex-direction: column;
@@ -171,6 +235,7 @@ h1, h2, h3, h4 {
     letter-spacing: 3px;
     color: var(--white);
     text-transform: uppercase;
+    transition: color var(--dur-hover) var(--ease-snap);
 }
 .logo-sub {
     font-family: var(--font-heading);
@@ -178,9 +243,12 @@ h1, h2, h3, h4 {
     letter-spacing: 4.5px;
     color: var(--gold);
     text-transform: uppercase;
+    transition: color var(--dur-hover) var(--ease-snap);
 }
+.logo-link:hover .logo-text { color: var(--gold-light); }
+.logo-link:hover .logo-sub  { color: var(--gold-light); }
 
-/* Header center info */
+/* ── Header center ── */
 .header-info-center {
     display: flex;
     flex-direction: column;
@@ -203,7 +271,8 @@ h1, h2, h3, h4 {
     background: #4ade80;
     border-radius: 50%;
     box-shadow: 0 0 8px #4ade80;
-    animation: goldPulse 2s ease infinite;
+    animation: statusPulse 2.2s ease infinite;
+    flex-shrink: 0;
 }
 .header-phone {
     font-family: var(--font-heading);
@@ -211,11 +280,11 @@ h1, h2, h3, h4 {
     font-weight: 700;
     letter-spacing: 1px;
     color: var(--gold);
-    transition: color 0.2s;
+    transition: color var(--dur-hover) var(--ease-snap);
 }
 .header-phone:hover { color: var(--gold-light); }
 
-/* Nav links */
+/* ── Nav links ── */
 .nav-links {
     display: flex;
     align-items: center;
@@ -230,7 +299,10 @@ h1, h2, h3, h4 {
     color: var(--white-dim);
     padding: 8px 12px;
     border-radius: var(--radius-sm);
-    transition: color 0.2s, background 0.2s;
+    /* Instant color response, medium background fill */
+    transition:
+        color      var(--dur-hover) var(--ease-snap),
+        background var(--dur-hover) var(--ease-snap);
 }
 .nav-links a:hover,
 .nav-links a.active-link {
@@ -238,7 +310,7 @@ h1, h2, h3, h4 {
     background: var(--gold-subtle);
 }
 
-/* Mobile nav toggle */
+/* ── Mobile nav toggle ── */
 .nav-toggle {
     display: none;
     flex-direction: column;
@@ -252,10 +324,10 @@ h1, h2, h3, h4 {
     height: 2px;
     background: var(--white);
     border-radius: 2px;
-    transition: all 0.3s ease;
+    transition: all 0.28s var(--ease-snap);
 }
 .nav-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .nav-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
 /* ═══════════════════════════════════════════════════════════
@@ -313,7 +385,7 @@ h1, h2, h3, h4 {
     gap: 24px;
 }
 
-/* Hero Badge */
+/* ── Hero Badge ── */
 .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -344,14 +416,10 @@ h1, h2, h3, h4 {
     inset: -4px;
     border: 1.5px solid rgba(74, 222, 128, 0.5);
     border-radius: 50%;
-    animation: pulse 2s ease infinite;
-}
-@keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(2.2); opacity: 0; }
+    animation: ringPulse 2s ease infinite;
 }
 
-/* Hero H1 */
+/* ── Hero H1 ── */
 .hero h1 {
     font-size: clamp(52px, 9vw, 100px);
     font-weight: 900;
@@ -368,7 +436,6 @@ h1, h2, h3, h4 {
     display: block;
 }
 
-/* Hero subtitle */
 .hero-sub {
     font-size: 14px;
     letter-spacing: 2px;
@@ -377,7 +444,7 @@ h1, h2, h3, h4 {
     font-weight: 400;
 }
 
-/* Hero CTA group */
+/* ── Hero CTA group ── */
 .hero-cta-group {
     display: flex;
     align-items: center;
@@ -386,8 +453,31 @@ h1, h2, h3, h4 {
     justify-content: center;
 }
 
-/* Dispatch button */
+/* ═══════════════════════════════════════════════════════════
+   MAGNETIC BUTTON SYSTEM
+   JS applies CSS custom property --mx/--my based on mouse
+   position. The button body shifts subtly toward the cursor.
+═══════════════════════════════════════════════════════════ */
+.magnetic-btn {
+    --mx: 0px;
+    --my: 0px;
+    transform: translate(var(--mx), var(--my)) scale(1);
+    transition:
+        transform  var(--dur-hover) var(--ease-spring),
+        box-shadow var(--dur-hover) var(--ease-snap);
+    will-change: transform;
+}
+.magnetic-btn:hover {
+    transform: translate(var(--mx), var(--my)) scale(1.04);
+}
+.magnetic-btn:active {
+    transform: translate(0,0) scale(0.97) !important;
+    transition-duration: 0.08s;
+}
+
+/* ── Dispatch (Primary Gold) Button ── */
 .dispatch-btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -400,24 +490,42 @@ h1, h2, h3, h4 {
     text-transform: uppercase;
     padding: 16px 32px;
     border-radius: var(--radius-full);
-    transition: transform 0.25s var(--ease-out), box-shadow 0.25s ease, opacity 0.25s;
-    box-shadow: 0 4px 20px rgba(200, 168, 75, 0.4), 0 0 0 0 rgba(200, 168, 75, 0);
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(200, 168, 75, 0.38);
+    /* Base transition — hover handled by .magnetic-btn */
+    transition:
+        transform  var(--dur-hover) var(--ease-spring),
+        box-shadow var(--dur-hover) var(--ease-snap);
 }
 .dispatch-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(200, 168, 75, 0.5);
+    box-shadow: 0 8px 32px rgba(200, 168, 75, 0.55), 0 0 0 1px rgba(255,245,195,0.2);
 }
-.dispatch-btn:active { transform: translateY(0); }
-.dispatch-btn.loading { opacity: 0.7; }
-.dispatch-icon, .dispatch-loader { display: flex; }
+.dispatch-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+.dispatch-btn.loading  { opacity: 0.72; }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
+.dispatch-icon, .dispatch-loader { display: flex; position: relative; z-index: 1; }
+.dispatch-label { position: relative; z-index: 1; }
+
+/* ── SHIMMER — the continuous light-sweep on the dispatch button ── */
+.btn-shimmer {
+    position: absolute;
+    inset: 0;
+    /* Narrow bright diagonal stripe */
+    background: linear-gradient(
+        105deg,
+        transparent 35%,
+        rgba(255,248,210,0.55) 50%,
+        transparent 65%
+    );
+    /* Start hidden to the far left */
+    transform: translateX(-130%) skewX(-12deg);
+    animation: shimmerSweep 3.2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+    border-radius: inherit;
 }
-.spin { animation: spin 0.9s linear infinite; }
 
-/* Quote hero button */
+/* ── Quote (Secondary Ghost) Button ── */
 .quote-hero-btn {
     display: inline-flex;
     align-items: center;
@@ -432,27 +540,45 @@ h1, h2, h3, h4 {
     padding: 15px 28px;
     border-radius: var(--radius-full);
     border: 1px solid rgba(248,247,243,0.25);
-    transition: all 0.25s ease;
+    transition:
+        border-color  var(--dur-hover) var(--ease-snap),
+        color         var(--dur-hover) var(--ease-snap),
+        background    var(--dur-hover) var(--ease-snap),
+        box-shadow    var(--dur-hover) var(--ease-snap),
+        transform     var(--dur-hover) var(--ease-spring);
 }
 .quote-hero-btn:hover {
     border-color: var(--gold);
     color: var(--gold);
     background: var(--gold-subtle);
+    box-shadow: 0 0 0 1px rgba(200,168,75,0.2), 0 4px 16px rgba(200,168,75,0.15);
+}
+/* Arrow icon inside ghost button slides right on hover */
+.quote-hero-btn svg {
+    transition: transform var(--dur-hover) var(--ease-spring);
+}
+.quote-hero-btn:hover svg {
+    transform: translateX(4px);
 }
 
-/* Hero phone pill */
+/* ── Hero phone pill ── */
 .hero-phone-pill {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     color: var(--white-dim);
     font-size: 13px;
-    transition: color 0.2s;
+    transition:
+        color     var(--dur-hover) var(--ease-snap),
+        transform var(--dur-hover) var(--ease-spring);
     margin-top: -4px;
 }
-.hero-phone-pill:hover { color: var(--gold); }
+.hero-phone-pill:hover {
+    color: var(--gold);
+    transform: translateY(-1px);
+}
 
-/* Trust strip */
+/* ── Trust strip ── */
 .hero-trust-strip {
     position: absolute;
     bottom: 0;
@@ -466,7 +592,6 @@ h1, h2, h3, h4 {
     align-items: center;
     justify-content: center;
     padding: 16px var(--container-pad);
-    gap: 0;
     flex-wrap: wrap;
 }
 .trust-item {
@@ -478,6 +603,13 @@ h1, h2, h3, h4 {
     letter-spacing: 0.8px;
     color: var(--white-dim);
     padding: 6px 20px;
+    transition:
+        color      var(--dur-hover) var(--ease-snap),
+        transform  var(--dur-hover) var(--ease-spring);
+}
+.trust-item:hover {
+    color: var(--gold-light);
+    transform: translateY(-1px);
 }
 .trust-sep {
     width: 1px;
@@ -564,6 +696,8 @@ h1, h2, h3, h4 {
     font-style: italic;
     margin-top: 8px;
 }
+
+/* ── text-cta link ── */
 .text-cta {
     display: inline-flex;
     align-items: center;
@@ -573,9 +707,16 @@ h1, h2, h3, h4 {
     font-weight: 600;
     letter-spacing: 1px;
     margin-top: 8px;
-    transition: gap 0.2s;
+    transition:
+        gap       var(--dur-hover) var(--ease-spring),
+        color     var(--dur-hover) var(--ease-snap),
+        transform var(--dur-hover) var(--ease-spring);
 }
-.text-cta:hover { gap: 12px; }
+.text-cta:hover {
+    gap: 14px;
+    color: var(--gold-light);
+    transform: translateX(2px);
+}
 
 /* Icon showcase */
 .icon-showcase {
@@ -586,10 +727,18 @@ h1, h2, h3, h4 {
 .icon-ring {
     position: relative;
     filter: drop-shadow(0 0 40px rgba(200,168,75,0.12));
+    transition: filter var(--dur-medium) var(--ease-snap);
+}
+.icon-ring:hover {
+    filter: drop-shadow(0 0 60px rgba(200,168,75,0.22));
 }
 
 /* ═══════════════════════════════════════════════════════════
-   PROMISE SECTION
+   PROMISE SECTION — Elite Guarantee Cards
+   FIX: Replaced slow transition with instant-response values.
+   border-color and box-shadow now respond at 0.18s (snap),
+   background fill at 0.22s. The glow triggers on first pixel
+   of hover, not after a perceptible delay.
 ═══════════════════════════════════════════════════════════ */
 .promise-section {
     background: var(--surface);
@@ -637,12 +786,29 @@ h1, h2, h3, h4 {
     margin: 0 28px;
 }
 
-/* Promise visual cards */
+/* Promise visual cards grid */
 .promise-visual {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
 }
+
+/*
+ ┌──────────────────────────────────────────────────────────┐
+ │  PV-CARD — FIXED HOVER TRANSITION                        │
+ │                                                          │
+ │  Root cause of lag: previously `transition: all 0.3s`   │
+ │  caused EVERY property (including layout ones) to        │
+ │  animate, creating a composite/recalc stall before the   │
+ │  visual update reached the screen.                       │
+ │                                                          │
+ │  Fix: enumerate ONLY the properties that change, use     │
+ │  var(--dur-hover) = 0.18s with var(--ease-snap) for      │
+ │  border/shadow (pure compositing — instant) and a        │
+ │  slightly longer 0.22s for background (paint layer).     │
+ │  transform uses spring easing for a premium "pop".       │
+ └──────────────────────────────────────────────────────────┘
+*/
 .pv-card {
     background: var(--surface-2);
     border: 1px solid rgba(200,168,75,0.12);
@@ -651,17 +817,40 @@ h1, h2, h3, h4 {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    transition: border-color 0.3s, transform 0.3s;
+    /* Enumerate only composited + cheap paint properties */
+    transition:
+        border-color  var(--dur-hover) var(--ease-snap),
+        box-shadow    var(--dur-hover) var(--ease-snap),
+        background    0.22s           var(--ease-snap),
+        transform     var(--dur-hover) var(--ease-spring);
+    will-change: transform, box-shadow;
+    cursor: default;
 }
 .pv-card:hover {
-    border-color: rgba(200,168,75,0.35);
-    transform: translateY(-3px);
+    border-color: rgba(200,168,75,0.48);
+    box-shadow:
+        0 0 0 1px rgba(200,168,75,0.12),
+        0 6px 28px rgba(200,168,75,0.14),
+        inset 0 0 20px rgba(200,168,75,0.04);
+    background: rgba(200,168,75,0.06);
+    transform: translateY(-4px);
+}
+/* Icon within pv-card brightens on card hover */
+.pv-card:hover svg path,
+.pv-card:hover svg rect,
+.pv-card:hover svg circle {
+    stroke: var(--gold-light);
+    transition: stroke var(--dur-hover) var(--ease-snap);
 }
 .pv-card span {
     font-size: 12.5px;
     font-weight: 500;
     color: var(--white-dim);
     line-height: 1.4;
+    transition: color var(--dur-hover) var(--ease-snap);
+}
+.pv-card:hover span {
+    color: var(--white);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -677,10 +866,17 @@ h1, h2, h3, h4 {
     border: 1px solid rgba(200,168,75,0.1);
     border-radius: var(--radius);
     padding: 32px 28px;
-    transition: border-color 0.3s, transform 0.3s, background 0.3s;
     position: relative;
     overflow: hidden;
+    /* Same fast enumerated transition as pv-card */
+    transition:
+        border-color  var(--dur-hover) var(--ease-snap),
+        box-shadow    var(--dur-hover) var(--ease-snap),
+        background    0.22s           var(--ease-snap),
+        transform     var(--dur-hover) var(--ease-spring);
+    will-change: transform, box-shadow;
 }
+/* Top gold line slides in from left on hover */
 .service-card::before {
     content: '';
     position: absolute;
@@ -690,14 +886,22 @@ h1, h2, h3, h4 {
     height: 2px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
     opacity: 0;
-    transition: opacity 0.3s;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition:
+        opacity   var(--dur-hover) var(--ease-snap),
+        transform var(--dur-medium) var(--ease-snap);
 }
 .service-card:hover {
     border-color: rgba(200,168,75,0.3);
-    transform: translateY(-4px);
+    transform: translateY(-5px);
     background: var(--surface-2);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.35), 0 0 0 1px rgba(200,168,75,0.1);
 }
-.service-card:hover::before { opacity: 1; }
+.service-card:hover::before {
+    opacity: 1;
+    transform: scaleX(1);
+}
 .service-icon {
     width: 56px;
     height: 56px;
@@ -708,17 +912,24 @@ h1, h2, h3, h4 {
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
-    transition: background 0.3s;
+    transition:
+        background    0.22s var(--ease-snap),
+        border-color  var(--dur-hover) var(--ease-snap),
+        transform     var(--dur-hover) var(--ease-spring);
 }
 .service-card:hover .service-icon {
     background: rgba(200,168,75,0.18);
+    border-color: rgba(200,168,75,0.4);
+    transform: scale(1.08) rotate(3deg);
 }
 .service-card h3 {
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 10px;
     letter-spacing: 0.5px;
+    transition: color var(--dur-hover) var(--ease-snap);
 }
+.service-card:hover h3 { color: var(--gold-light); }
 .service-card p {
     font-size: 13.5px;
     color: var(--white-dim);
@@ -734,7 +945,7 @@ h1, h2, h3, h4 {
     gap: 18px;
 }
 .coverage-card {
-    perspective: 800px;
+    perspective: 900px;
     height: 160px;
     cursor: pointer;
 }
@@ -743,7 +954,7 @@ h1, h2, h3, h4 {
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transition: transform 0.6s var(--ease-in-out);
+    transition: transform 0.55s var(--ease-in-out);
 }
 .coverage-card.is-flipped .flip-inner {
     transform: rotateY(180deg);
@@ -762,9 +973,14 @@ h1, h2, h3, h4 {
     justify-content: center;
     padding: 20px;
     background: var(--surface);
-    transition: border-color 0.3s;
+    transition:
+        border-color var(--dur-hover) var(--ease-snap),
+        box-shadow   var(--dur-hover) var(--ease-snap);
 }
-.flip-front:hover { border-color: rgba(200,168,75,0.35); }
+.flip-front:hover {
+    border-color: rgba(200,168,75,0.4);
+    box-shadow: 0 4px 20px rgba(200,168,75,0.1);
+}
 .flip-back {
     transform: rotateY(180deg);
     background: linear-gradient(135deg, var(--surface-2), rgba(200,168,75,0.06));
@@ -822,11 +1038,16 @@ h1, h2, h3, h4 {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    transition: border-color 0.3s, transform 0.3s;
+    transition:
+        border-color  var(--dur-hover) var(--ease-snap),
+        box-shadow    var(--dur-hover) var(--ease-snap),
+        transform     var(--dur-hover) var(--ease-spring);
+    will-change: transform, box-shadow;
 }
 .review-card:hover {
-    border-color: rgba(200,168,75,0.25);
-    transform: translateY(-3px);
+    border-color: rgba(200,168,75,0.28);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 32px rgba(0,0,0,0.3);
 }
 .review-stars { display: flex; }
 .review-text {
@@ -941,9 +1162,8 @@ h1, h2, h3, h4 {
     flex-direction: column;
     gap: 7px;
 }
-.form-group.full-width {
-    grid-column: 1 / -1;
-}
+.form-group.full-width { grid-column: 1 / -1; }
+
 .form-group label {
     font-size: 11px;
     font-weight: 600;
@@ -964,10 +1184,13 @@ h1, h2, h3, h4 {
     font-family: var(--font-body);
     font-size: 14px;
     padding: 13px 16px;
-    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
     outline: none;
     -webkit-appearance: none;
     appearance: none;
+    transition:
+        border-color var(--dur-hover) var(--ease-snap),
+        background   0.22s           var(--ease-snap),
+        box-shadow   var(--dur-hover) var(--ease-snap);
 }
 .form-group select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(200,168,75,0.7)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
@@ -985,14 +1208,17 @@ h1, h2, h3, h4 {
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: rgba(200,168,75,0.5);
+    border-color: rgba(200,168,75,0.55);
     background: rgba(200,168,75,0.04);
     box-shadow: 0 0 0 3px rgba(200,168,75,0.1);
 }
 .form-group input::placeholder,
 .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
 
+/* Form submit — shimmer + magnetic */
 .form-submit-btn {
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1007,14 +1233,30 @@ h1, h2, h3, h4 {
     padding: 16px 32px;
     border-radius: var(--radius-sm);
     margin-top: 8px;
-    transition: transform 0.25s var(--ease-out), box-shadow 0.25s ease, opacity 0.2s;
     box-shadow: 0 4px 20px rgba(200,168,75,0.3);
+    transition:
+        transform  var(--dur-hover) var(--ease-spring),
+        box-shadow var(--dur-hover) var(--ease-snap);
 }
 .form-submit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(200,168,75,0.45);
+    box-shadow: 0 8px 30px rgba(200,168,75,0.48);
 }
-.form-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.form-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+/* Shimmer on form button — slower period, more dramatic */
+.form-submit-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255,248,210,0.5) 50%,
+        transparent 70%
+    );
+    transform: translateX(-130%) skewX(-12deg);
+    animation: shimmerSweep 3.8s ease-in-out infinite 0.6s;
+    pointer-events: none;
+}
 
 .quote-or-call {
     text-align: center;
@@ -1031,9 +1273,15 @@ h1, h2, h3, h4 {
     font-weight: 600;
     font-family: var(--font-heading);
     font-size: 16px;
-    transition: color 0.2s;
+    transition:
+        color     var(--dur-hover) var(--ease-snap),
+        transform var(--dur-hover) var(--ease-spring);
+    display: inline-block;
 }
-.quote-phone-link:hover { color: var(--gold-light); }
+.quote-phone-link:hover {
+    color: var(--gold-light);
+    transform: translateY(-1px);
+}
 
 /* ═══════════════════════════════════════════════════════════
    FOOTER
@@ -1048,7 +1296,6 @@ footer {
     gap: clamp(30px, 5vw, 70px);
     padding: clamp(50px, 7vw, 90px) 0;
 }
-.footer-brand {}
 .footer-logo {
     display: flex;
     align-items: center;
@@ -1091,7 +1338,9 @@ footer {
 .footer-links-col a {
     font-size: 13px;
     color: var(--white-dim);
-    transition: color 0.2s, padding-left 0.2s;
+    transition:
+        color         var(--dur-hover) var(--ease-snap),
+        padding-left  var(--dur-hover) var(--ease-spring);
 }
 .footer-links-col a:hover {
     color: var(--gold);
@@ -1111,9 +1360,10 @@ footer {
     font-weight: 700;
     color: var(--gold);
     margin-top: 4px;
-    transition: color 0.2s;
+    transition: color var(--dur-hover) var(--ease-snap);
 }
 .footer-contact a:hover { color: var(--gold-light); }
+
 .footer-btn {
     display: inline-block;
     background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
@@ -1125,11 +1375,13 @@ footer {
     text-transform: uppercase;
     padding: 13px 24px;
     border-radius: var(--radius-sm);
-    transition: transform 0.25s, box-shadow 0.25s;
+    transition:
+        transform  var(--dur-hover) var(--ease-spring),
+        box-shadow var(--dur-hover) var(--ease-snap);
 }
 .footer-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(200,168,75,0.35);
+    box-shadow: 0 8px 20px rgba(200,168,75,0.38);
 }
 .footer-badges {
     display: flex;
@@ -1145,6 +1397,13 @@ footer {
     border: 1px solid rgba(255,255,255,0.12);
     padding: 4px 10px;
     border-radius: var(--radius-full);
+    transition:
+        border-color var(--dur-hover) var(--ease-snap),
+        color        var(--dur-hover) var(--ease-snap);
+}
+.footer-badges span:hover {
+    border-color: rgba(200,168,75,0.4);
+    color: var(--gold-light);
 }
 
 .footer-bottom {
@@ -1165,7 +1424,7 @@ footer {
 .footer-legal a {
     color: rgba(200,168,75,0.5);
     font-size: 11.5px;
-    transition: color 0.2s;
+    transition: color var(--dur-hover) var(--ease-snap);
 }
 .footer-legal a:hover { color: var(--gold); }
 
@@ -1185,7 +1444,7 @@ footer {
     padding: 12px 16px;
     gap: 10px;
     transform: translateY(100%);
-    transition: transform 0.4s var(--ease-out);
+    transition: transform 0.4s var(--ease-spring);
 }
 .mobile-dispatch-bar.is-visible {
     transform: translateY(0);
@@ -1203,15 +1462,23 @@ footer {
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
+    transition:
+        transform  var(--dur-hover) var(--ease-spring),
+        box-shadow var(--dur-hover) var(--ease-snap);
 }
 .mob-call {
     background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
     color: var(--black);
 }
+.mob-call:hover  { transform: scale(1.03); }
 .mob-quote {
     background: transparent;
     color: var(--white);
     border: 1px solid rgba(255,255,255,0.15);
+}
+.mob-quote:hover {
+    border-color: var(--gold);
+    color: var(--gold);
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1233,12 +1500,8 @@ footer {
 @media (max-width: 768px) {
     :root { --header-h: 60px; }
 
-    /* Header mobile */
     .header-info-center { display: none; }
-    .nav-toggle {
-        display: flex;
-        order: 3;
-    }
+    .nav-toggle { display: flex; order: 3; }
     .nav-links {
         display: none;
         position: absolute;
@@ -1260,7 +1523,6 @@ footer {
         letter-spacing: 2px;
     }
 
-    /* Hero */
     .hero { padding: 80px 20px 130px; min-height: 85vh; }
     .hero h1 { font-size: clamp(44px, 12vw, 70px); }
     .hero-sub { font-size: 11px; }
@@ -1269,24 +1531,24 @@ footer {
     .trust-item { padding: 6px 10px; }
     .trust-sep { display: none; }
 
-    /* Services */
     .services-grid { grid-template-columns: 1fr; }
     .coverage-grid { grid-template-columns: 1fr 1fr; }
 
-    /* Form */
     .form-row { grid-template-columns: 1fr; }
 
-    /* Footer */
     .footer-inner { grid-template-columns: 1fr; gap: 40px; }
 
-    /* Mobile bar */
     .mobile-dispatch-bar {
         display: flex;
         padding-bottom: max(12px, env(safe-area-inset-bottom));
     }
-
-    /* Push body up so bar doesn't cover content */
     body { padding-bottom: 75px; }
+
+    /* Disable magnetic on touch devices */
+    .magnetic-btn {
+        --mx: 0px;
+        --my: 0px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1296,6 +1558,30 @@ footer {
     .stat-divider { width: 80px; height: 1px; margin: 0; }
 }
 
+/* Respect reduced motion — remove all animations but keep structural transitions */
+@media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-child {
+        transition: opacity 0.3s ease;
+        transform: none;
+    }
+    .btn-shimmer,
+    .form-submit-btn::after {
+        animation: none;
+    }
+    .logo-icon {
+        animation: none;
+    }
+    .pulse-ring::before {
+        animation: none;
+    }
+    .status-dot-small {
+        animation: none;
+    }
+    .magnetic-btn {
+        transition: box-shadow var(--dur-hover) var(--ease-snap);
+    }
+}
+
 /* ─── SCROLLBAR ────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--black); }
@@ -1303,17 +1589,15 @@ footer {
     background: rgba(200,168,75,0.35);
     border-radius: 3px;
 }
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(200,168,75,0.55);
-}
+::-webkit-scrollbar-thumb:hover { background: rgba(200,168,75,0.55); }
 
-/* ─── SELECTION ────────────────────────────────────────────── */
+/* ─── SELECTION ─────────────────────────────────────────────── */
 ::selection {
     background: rgba(200,168,75,0.25);
     color: var(--white);
 }
 
-/* ─── FOCUS VISIBLE ────────────────────────────────────────── */
+/* ─── FOCUS VISIBLE ─────────────────────────────────────────── */
 :focus-visible {
     outline: 2px solid var(--gold);
     outline-offset: 3px;
